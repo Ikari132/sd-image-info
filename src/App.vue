@@ -7,7 +7,7 @@ import { RouterLink, RouterView } from "vue-router";
     <h1
       class="mb-4 text-center text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl"
     >
-      Stable diffusion
+      SD
       <span
         class="text-transparent font-extrabold bg-clip-text bg-gradient-to-r to-purple-600 from-rose-400"
         >Prompt reader</span
@@ -31,7 +31,7 @@ import { RouterLink, RouterView } from "vue-router";
       >
         <button
           type="button"
-          class="hover:fill-white px-3 py-2 mr-2 text-xs font-medium text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-lg text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+          class="hover:fill-white dark:fill-white px-3 py-2 mr-2 text-xs font-medium text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-lg text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +84,7 @@ nav {
 }
 
 nav a.router-link-exact-active {
-  @apply bg-slate-100;
+  @apply bg-slate-100 dark:bg-slate-700;
 }
 
 nav a {
