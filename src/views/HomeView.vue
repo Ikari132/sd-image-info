@@ -16,12 +16,11 @@ function handleFile(e) {
 
   exifr.parse(files[0], true).then((res) => {
     let params;
-
     if (res.userComment) {
       params = new TextDecoder().decode(res.userComment).replace("UNICODE", "");
       rPromptType.value = "default";
     } else if (res.parameters) {
-      params = res.params;
+      params = res.parameters;
       rPromptType.value = "default";
     } else if (res.workflow) {
       // comfyui
@@ -67,8 +66,8 @@ function handleCopy() {
       @clear="rParams = null"
     />
   </div>
-  <div v-else>
-    <div class="flex items-center justify-center w-full">
+  <div v-else class="w-full">
+    <div class="flex items-center justify-center w-full max-w-screen-lg">
       <label
         for="dropzone-file"
         class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
