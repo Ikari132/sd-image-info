@@ -19,6 +19,7 @@ import { RouterLink, RouterView } from "vue-router";
       <RouterView />
     </div>
   </main>
+
   <footer class="flex items-center justify-center w-full">
     <div
       class="flex items-center justify-between w-full max-w-screen-lg flex-col sm:flex-row"
@@ -83,8 +84,15 @@ header {
   line-height: 1.5;
 }
 
+footer {
+  position: fixed;
+  bottom: 0;
+  padding: 2rem;
+  left: 0;
+  background: var(--color-background);
+}
+
 nav {
-  /* width: 100%; */
   font-size: 12px;
   text-align: center;
 }

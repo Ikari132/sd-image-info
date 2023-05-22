@@ -9,6 +9,13 @@
   font-weight: normal;
 
   display: grid;
-  grid-template-rows: 100px 1fr 60px;
+  grid-template-rows: 100px 1fr 100px;
   min-height: 100vh;
+}
+
+@media only screen and (max-width: 640px) {
+  #app {
+    padding: 1rem;
+    grid-template-rows: 100px 1fr 120px;
+  }
 }
