@@ -92,14 +92,14 @@ function handleCopy() {
             <span class="font-semibold">Click to upload</span> or drag and drop
           </p>
           <p class="text-xs text-gray-500 dark:text-gray-400">PNG or JPG</p>
-          <p class="text-xs py-2 text-gray-500 dark:text-gray-400">
+          <p class="text-xs py-2 text-center text-gray-500 dark:text-gray-400">
             *It runs directly in your browser, no image is sent to the server
           </p>
         </div>
         <input
           id="dropzone-file"
           type="file"
-          class="hidden"
+          class="w-full h-full absolute opacity-0"
           @change="handleFile"
         />
       </label>
