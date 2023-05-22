@@ -10,7 +10,7 @@ import { RouterLink, RouterView } from "vue-router";
       SD
       <span
         class="text-transparent font-extrabold bg-clip-text bg-gradient-to-r to-purple-600 from-rose-400"
-        >Image info</span
+        >Image Info</span
       >
     </h1>
   </header>
