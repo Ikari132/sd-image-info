@@ -1,6 +1,6 @@
 {
   "name": "sd-prompt-reader",
-  "description": "Simple in-browser stable diffusion prompt reader",
+  "description": "Simple in-browser stable diffusion metadata reader",
   "version": "1.0.0",
   "author": {
     "name": "Anton Aksionau",
