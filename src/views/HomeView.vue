@@ -12,7 +12,6 @@ let rShowMessage = ref(null);
 function handleFile(e) {
   const fileList = e.target.files;
   let files = Array.from(fileList);
-  console.log("files", files);
 
   exifr.parse(files[0], true).then((res) => {
     let params;
@@ -29,7 +28,6 @@ function handleFile(e) {
     }
 
     rParams.value = params;
-    console.log(params);
   });
 }
 function showCopyMessage() {
