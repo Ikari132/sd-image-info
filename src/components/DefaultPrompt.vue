@@ -12,10 +12,8 @@ const props = defineProps({
 
 const emit = defineEmits(["copy", "save"]);
 
-let rParams = ref(null);
-
 function handleCopy() {
-  navigator.clipboard.writeText(rParams.value);
+  navigator.clipboard.writeText(props.params);
   emit("copy");
 }
 
