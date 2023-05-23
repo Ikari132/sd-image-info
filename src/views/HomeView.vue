@@ -9,6 +9,14 @@ let rParams = ref(null);
 let rPromptType = ref(null);
 let rShowMessage = ref(null);
 
+function getStringFromBytes(uint8Array) {
+  const decoder = new TextDecoder("utf-8");
+  const filteredUint8Array = Uint8Array.from(
+    uint8Array.filter((byte) => byte !== 0)
+  );
+
+  return decoder.decode(filteredUint8Array);
+}
 function handleFile(e) {
   const fileList = e.target.files;
   let files = Array.from(fileList);
@@ -16,7 +24,7 @@ function handleFile(e) {
   exifr.parse(files[0], true).then((res) => {
     let params;
     if (res.userComment) {
-      params = new TextDecoder().decode(res.userComment).replace("UNICODE", "");
+      params = getStringFromBytes(res.userComment).replace("UNICODE", "");
       rPromptType.value = "default";
     } else if (res.parameters) {
       params = res.parameters;
