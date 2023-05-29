@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineEmits } from "vue";
+import { defineEmits } from "vue";
 import IconCancel from "./icons/IconCancel.vue";
 import IconCopy from "./icons/IconCopy.vue";
 import IconDownload from "./icons/IconDownload.vue";
