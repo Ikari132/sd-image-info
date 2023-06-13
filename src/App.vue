@@ -4,15 +4,17 @@ import { RouterLink, RouterView } from "vue-router";
 
 <template>
   <header>
-    <h1
-      class="mb-4 text-center text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl"
-    >
-      SD
-      <span
-        class="text-transparent font-extrabold bg-clip-text bg-gradient-to-r to-purple-600 from-rose-400"
-        >Image Info</span
+    <a href="/">
+      <h1
+        class="mb-4 text-center text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl"
       >
-    </h1>
+        SD
+        <span
+          class="text-transparent font-extrabold bg-clip-text bg-gradient-to-r to-purple-600 from-rose-400"
+          >Image Info</span
+        >
+      </h1>
+    </a>
   </header>
   <main class="flex flex-col items-center my-10">
     <div class="w-full max-w-screen-lg">
