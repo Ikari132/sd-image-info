@@ -20,8 +20,7 @@ function getStringFromBytes(uint8Array) {
 
   return decoder.decode(filteredUint8Array);
 }
-function handleFile(e) {
-  const fileList = e.target.files;
+function handleFile(fileList) {
   let files = Array.from(fileList);
 
   exifr.parse(files[0], true).then((res) => {
@@ -39,7 +38,7 @@ function handleFile(e) {
     } else {
       rPromptType.value = "notFound";
     }
-    console.log(rPromptType.value, params);
+    console.log(rPromptType.value, params, files);
 
     rParams.value = params;
   });
@@ -94,6 +93,6 @@ function handleCopy() {
     </button>
   </div>
   <div v-else class="w-full">
-    <FileUploader @change="handleFile" />
+    <FileUploader @files-change="handleFile" />
   </div>
 </template>
