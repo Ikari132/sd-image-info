@@ -101,6 +101,10 @@ function handleCopy() {
   );
   emit("copy");
 }
+function handleCopyGroup(prompt) {
+  navigator.clipboard.writeText(prompt.text);
+  emit("copy");
+}
 </script>
 
 <template>
@@ -131,17 +135,29 @@ function handleCopy() {
         Copy prompt
       </button>
     </div>
-
-    <div
-      class="block max-w-xl p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-    >
-      <p
+    <div class="flex flex-col items-start max-w-xl">
+      <div
         v-for="prompt in rPrompts"
         :key="prompt.id"
-        class="p-2 font-normal text-gray-700 dark:text-gray-400"
+        class="block w-full mb-3 p-0 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
       >
-        {{ prompt.text }}
-      </p>
+        <div
+          class="flex justify-between items-center bg-slate-50 dark:bg-slate-900 border-gray-200 dark:border-bray-700 m-2 p-2 rounded-lg"
+        >
+          <div class="font-semibold text-slate-500">Text node</div>
+          <div>
+            <button
+              @click="handleCopyGroup(prompt)"
+              class="px-2.5 py-2.5 inline-flex items-center text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+            >
+              <IconCopy class="mr-0" />
+            </button>
+          </div>
+        </div>
+        <div class="w-full p-4">
+          {{ prompt.text }}
+        </div>
+      </div>
     </div>
   </div>
   <h2 class="pt-8 pb-4 text-xl font-bold">Workflow preview</h2>
