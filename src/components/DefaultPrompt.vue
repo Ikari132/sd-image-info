@@ -1,8 +1,9 @@
 <script setup>
-import { defineEmits } from "vue";
+import { defineEmits, computed } from "vue";
 import IconCancel from "./icons/IconCancel.vue";
 import IconCopy from "./icons/IconCopy.vue";
 import IconDownload from "./icons/IconDownload.vue";
+import { parseFullMeta, parseTextMeta } from "sd-prompt-parser";
 
 const props = defineProps({
   params: {
@@ -10,10 +11,23 @@ const props = defineProps({
   },
 });
 
+const groupNames = {
+  pos: "Prompt",
+  neg: "Negative Prompt",
+  meta: "Parameters",
+};
+const promptParts = computed(() => {
+  return parseTextMeta(props.params);
+});
+
 const emit = defineEmits(["copy", "save"]);
 
 function handleCopy() {
   navigator.clipboard.writeText(props.params);
+  emit("copy");
+}
+function handleCopyGroup(key) {
+  navigator.clipboard.writeText(promptParts.value[key]);
   emit("copy");
 }
 
@@ -55,11 +69,37 @@ function handleSave() {
     </button>
   </div>
 
-  <div
+  <div class="flex flex-col items-start max-w-xl">
+    <div
+      v-for="(item, key) in promptParts"
+      :key="item"
+      class="block w-full mb-3 p-0 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+    >
+      <div
+        class="flex justify-between items-center bg-slate-50 dark:bg-slate-900 border-gray-200 dark:border-bray-700 m-2 p-2 rounded-lg"
+      >
+        <div class="font-semibold text-slate-500">
+          {{ groupNames[key] }}
+        </div>
+        <div>
+          <button
+            @click="handleCopyGroup(key)"
+            class="px-2.5 py-2.5 inline-flex items-center text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+          >
+            <IconCopy class="mr-0 -ml-0" />
+          </button>
+        </div>
+      </div>
+      <div class="w-full p-6">
+        {{ item }}
+      </div>
+    </div>
+  </div>
+  <!-- <div
     class="block max-w-xl p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
   >
     <p class="font-normal text-gray-700 dark:text-gray-400">
       {{ params }}
     </p>
-  </div>
+  </div> -->
 </template>
