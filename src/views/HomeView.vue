@@ -5,6 +5,9 @@ import exifr from "exifr";
 import ComfyPrompt from "../components/ComfyPrompt.vue";
 import DefaultPrompt from "../components/DefaultPrompt.vue";
 import IconCheck from "../components/icons/IconCheck.vue";
+import IconExclamation from "../components/icons/IconExclamation.vue";
+import FileUploader from "../components/FileUploader.vue";
+
 let rParams = ref(null);
 let rPromptType = ref(null);
 let rShowMessage = ref(null);
@@ -33,7 +36,10 @@ function handleFile(e) {
       // comfyui
       params = res;
       rPromptType.value = "comfyui";
+    } else {
+      rPromptType.value = "notFound";
     }
+    console.log(rPromptType.value, params);
 
     rParams.value = params;
   });
@@ -72,43 +78,22 @@ function handleCopy() {
       @clear="rParams = null"
     />
   </div>
+  <div
+    v-else-if="rPromptType === 'notFound'"
+    class="flex flex-col items-center justify-center w-full h-64 border-2 border-slate-300 rounded-lg bg-slate-50 dark:bg-slate-700 dark:border-slate-600"
+  >
+    <IconExclamation class="w-10 h-10 text-slate-500 dark:text-slate-400" />
+    <span class="font-bold p-4 text-slate-500 dark:text-slate-400">
+      Prompt not found
+    </span>
+    <button
+      @click="() => (rPromptType = null)"
+      class="inline-flex items-center py-2.5 px-5 sm:mr-2 mb-2 text-sm font-medium text-slate-900 focus:outline-none bg-white rounded-lg border border-slate-200 hover:bg-slate-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-600 dark:hover:text-white dark:hover:bg-slate-700"
+    >
+      Return
+    </button>
+  </div>
   <div v-else class="w-full">
-    <div class="flex items-center justify-center w-full max-w-screen-lg">
-      <label
-        for="dropzone-file"
-        class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-      >
-        <div class="flex flex-col items-center justify-center pt-5 pb-6">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-10 h-10 mb-3 text-gray-400"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
-            />
-          </svg>
-
-          <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-            <span class="font-semibold">Click to upload</span> or drag and drop
-          </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">PNG or JPG</p>
-          <p class="text-xs py-2 text-center text-gray-500 dark:text-gray-400">
-            *It runs directly in your browser, no image is sent to the server
-          </p>
-        </div>
-        <input
-          id="dropzone-file"
-          type="file"
-          class="w-full h-full absolute opacity-0"
-          @change="handleFile"
-        />
-      </label>
-    </div>
+    <FileUploader @change="handleFile" />
   </div>
 </template>
