@@ -38,7 +38,6 @@ function handleFile(fileList) {
     } else {
       rPromptType.value = "notFound";
     }
-    console.log(rPromptType.value, params, files);
 
     rParams.value = params;
   });

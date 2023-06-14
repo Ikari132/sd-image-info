@@ -4,6 +4,7 @@ import IconCancel from "./icons/IconCancel.vue";
 import IconCopy from "./icons/IconCopy.vue";
 import IconDownload from "./icons/IconDownload.vue";
 import { parseFullMeta, parseTextMeta } from "sd-prompt-parser";
+import { parameterToKey } from "./constants";
 
 const props = defineProps({
   params: {
@@ -41,6 +42,34 @@ function handleSave() {
   link.click();
   URL.revokeObjectURL(link.href);
 }
+
+function handleCopyForTextbox() {
+  const fullMeta = parseFullMeta(props.params);
+  const result = [];
+  result.push(`--prompt "${promptParts.value.pos.trim()}"`);
+  if (fullMeta.neg) {
+    result.push(`--negative_prompt "${promptParts.value.neg.trim()}"`);
+  }
+
+  if (fullMeta.meta) {
+    const size = fullMeta.meta["Size"];
+    if (size) {
+      const [width, height] = size.split("x");
+      if (width && height) {
+        result.push(`--width "${width}"`, `--height "${height}"`);
+      }
+    }
+
+    Object.keys(fullMeta.meta).forEach((key) => {
+      if (parameterToKey[key]) {
+        result.push(`--${parameterToKey[key]} "${fullMeta.meta[key].trim()}"`);
+      }
+    });
+  }
+
+  navigator.clipboard.writeText(result.join(" "));
+  emit("copy");
+}
 </script>
 
 <template>
@@ -50,6 +79,7 @@ function handleSave() {
       class="inline-flex items-center py-2.5 px-5 sm:mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
     >
       <IconCancel />
+
       Clear
     </button>
     <button
@@ -58,17 +88,25 @@ function handleSave() {
     >
       <IconDownload />
 
-      Save to txt
+      Save txt
+    </button>
+    <button
+      @click="handleCopyForTextbox"
+      class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center sm:mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    >
+      <IconCopy />
+
+      Copy for textbox
     </button>
     <button
       @click="handleCopy"
       class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
     >
       <IconCopy />
-      Copy prompt
+
+      Copy all
     </button>
   </div>
-
   <div class="flex flex-col items-start max-w-xl">
     <div
       v-for="(item, key) in promptParts"
