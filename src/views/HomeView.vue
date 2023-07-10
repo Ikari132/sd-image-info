@@ -91,7 +91,7 @@ function handleCopy() {
       Return
     </button>
   </div>
-  <div v-else class="w-full">
+  <div v-else class="w-full h-full flex items-center">
     <FileUploader @files-change="handleFile" />
   </div>
 </template>

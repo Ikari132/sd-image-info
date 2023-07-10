@@ -4,8 +4,8 @@
       <h2 class="p-2 text-lg font-semibold">Introduction</h2>
       <p class="p-2">
         SD Image info is a simple and fast tool that can read generation data
-        from stable diffusion. It runs directly in your browser, no image is
-        sent to the server. It supports Automatic1111 and ComfyUI prompt
+        from Stable Diffusion images. It runs directly in your browser, no image
+        is sent to the server. It supports Automatic1111 and ComfyUI prompt
         metadata formats.
       </p>
       <h2 class="p-2 text-lg font-semibold">Save Generation Data</h2>
