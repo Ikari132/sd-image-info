@@ -31,8 +31,9 @@
       <input
         id="dropzone-file"
         type="file"
+        multiple
         class="w-full h-full absolute opacity-0 cursor-pointer"
-        @change="$emit('files-change', $event.target.files)"
+        @change="$emit('files-change', $event.target?.files)"
       />
     </label>
   </div>
