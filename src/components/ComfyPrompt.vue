@@ -135,7 +135,7 @@ function handleCopyGroup(prompt) {
         Copy prompt
       </button>
     </div>
-    <div class="flex flex-col items-start max-w-xl">
+    <div class="flex flex-col items-start w-full max-w-xl">
       <div
         v-for="prompt in rPrompts"
         :key="prompt.id"

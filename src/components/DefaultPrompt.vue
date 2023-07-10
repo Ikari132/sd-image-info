@@ -107,7 +107,7 @@ function handleCopyForTextbox() {
       Copy all
     </button>
   </div>
-  <div class="flex flex-col items-start max-w-xl">
+  <div class="flex flex-col items-start w-full max-w-xl">
     <div
       v-for="(item, key) in promptParts"
       :key="item"
