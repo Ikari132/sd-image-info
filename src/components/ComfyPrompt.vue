@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, defineEmits } from "vue";
+import { ref, onMounted, defineEmits, onUnmounted, watch } from "vue";
 import { LiteGraph } from "litegraph.js";
 import { nanoid } from "nanoid";
 import IconCancel from "./icons/IconCancel.vue";
@@ -11,7 +11,7 @@ const props = defineProps({
     type: Object,
   },
 });
-const emit = defineEmits(["copy", "save"]);
+const emit = defineEmits(["copy", "save", "clear"]);
 
 let rPrompts = ref(null);
 
@@ -21,9 +21,19 @@ onMounted(() => {
   parseParams();
 });
 
+watch(props, () => {
+  parseParams();
+});
+
+onUnmounted(() => {
+  graph.stop();
+  graph.clear();
+  graph.detachCanvas();
+});
+
 function mountGraph() {
   const canvasEl = document.getElementById("myCanvas");
-  var canvas = new LiteGraph.LGraphCanvas("#myCanvas", graph);
+  let canvas = new LiteGraph.LGraphCanvas("#myCanvas", graph);
 
   function resizeCanvas() {
     canvasEl.width = canvasEl.offsetWidth;
