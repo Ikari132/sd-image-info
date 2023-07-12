@@ -21,7 +21,7 @@ const promptParts = computed(() => {
   return parseTextMeta(props.params);
 });
 
-const emit = defineEmits(["copy", "save"]);
+const emit = defineEmits(["copy", "save", "clear"]);
 
 function handleCopy() {
   navigator.clipboard.writeText(props.params);
