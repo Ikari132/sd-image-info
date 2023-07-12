@@ -142,8 +142,8 @@ function handleCopy() {
 
       Clear
     </button>
-    <div class="columns-2 md:columns-3 lg:columns-4 gap-4">
-      <div v-for="rImage in rImages" :key="rImage.id" class="mb-4">
+    <div class="columns-2 md:columns-3 lg:columns-4 mt-1">
+      <div v-for="rImage in rImages" :key="rImage.id" class="inline-block mb-2">
         <Card :url="rImage.imageURL" @click="() => (rSelected = rImage)" />
       </div>
     </div>
