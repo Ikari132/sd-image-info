@@ -11,6 +11,8 @@ import Card from "../components/Card.vue";
 import ImageSelector from "../components/ImageSelector.vue";
 import IconCancel from "../components/icons/IconCancel.vue";
 
+import { saveFile, getFileName } from "../components/helpers";
+
 let rShowMessage = ref(null);
 
 let rImages = ref(null);
@@ -28,6 +30,8 @@ async function getImageData(file) {
   let params = null;
   let type = null;
   let id = nanoid();
+
+  const filename = getFileName(file.name);
 
   const imageURL = URL.createObjectURL(file);
 
@@ -47,7 +51,7 @@ async function getImageData(file) {
         type = "notFound";
       }
 
-      resolve({ params, type, imageURL, id });
+      resolve({ params, type, imageURL, id, filename });
     });
   });
 }
@@ -74,6 +78,15 @@ function showCopyMessage() {
 }
 function handleCopy() {
   showCopyMessage();
+}
+
+function handleSave() {
+  const { params, type, filename } = rSelected.value;
+  if (type === "comfyui") {
+    saveFile(params.workflow, filename, "json");
+  } else if (type === "default") {
+    saveFile(params, filename, "txt");
+  }
 }
 </script>
 
@@ -112,12 +125,16 @@ function handleCopy() {
     <DefaultPrompt
       v-if="rSelected.type === 'default'"
       :params="rSelected.params"
+      v-model:filename="rSelected.filename"
+      @save="handleSave"
       @copy="handleCopy"
       @clear="rSelected = null"
     />
     <ComfyPrompt
       v-if="rSelected.type === 'comfyui'"
       :params="rSelected.params"
+      v-model:filename="rSelected.filename"
+      @save="handleSave"
       @copy="handleCopy"
       @clear="rSelected = null"
     />

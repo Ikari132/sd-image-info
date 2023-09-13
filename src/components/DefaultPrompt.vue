@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits, computed } from "vue";
+import { defineEmits, computed, ref } from "vue";
 import IconCancel from "./icons/IconCancel.vue";
 import IconCopy from "./icons/IconCopy.vue";
 import IconDownload from "./icons/IconDownload.vue";
@@ -8,6 +8,9 @@ import { parameterToKey } from "./constants";
 
 const props = defineProps({
   params: {
+    type: String,
+  },
+  filename: {
     type: String,
   },
 });
@@ -21,7 +24,9 @@ const promptParts = computed(() => {
   return parseTextMeta(props.params);
 });
 
-const emit = defineEmits(["copy", "save", "clear"]);
+const emit = defineEmits(["copy", "save", "clear", "update:filename"]);
+
+const showSaveModal = ref(false);
 
 function handleCopy() {
   navigator.clipboard.writeText(props.params);
@@ -33,14 +38,8 @@ function handleCopyGroup(key) {
 }
 
 function handleSave() {
-  const file = new Blob([props.params], { type: "text/plain" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(file);
-
-  link.download = "prompt.txt";
-
-  link.click();
-  URL.revokeObjectURL(link.href);
+  emit("save");
+  showSaveModal.value = false;
 }
 
 function handleCopyForTextbox() {
@@ -76,20 +75,54 @@ function handleCopyForTextbox() {
   <div class="py-2 flex justify-end w-full max-w-xl flex-col sm:flex-row">
     <button
       @click="$emit('clear')"
-      class="inline-flex items-center py-2.5 px-5 sm:mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+      class="inline-flex items-center py-2.5 px-3 sm:mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+      title="clear"
     >
-      <IconCancel />
-
-      Clear
+      <IconCancel class="mr-0" />
     </button>
     <button
-      @click="handleSave"
+      @click="showSaveModal = true"
       class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center sm:mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
     >
       <IconDownload />
 
       Save txt
     </button>
+
+    <div
+      v-if="showSaveModal"
+      style="width: 300px; height: auto; left: calc(50% - 150px)"
+      class="p-3 fixed z-10 flex flex-col gap-3 items-center justify-center bg-slate-50 shadow dark:bg-slate-900"
+    >
+      <label
+        for="prompt"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+        >Filename</label
+      >
+      <textarea
+        class="w-full p-3 dark:bg-black dark:text-gray-400"
+        :value="filename"
+        @input="$emit('update:filename', $event.target.value)"
+      >
+      </textarea>
+      <div class="w-full flex justify-end gap-3">
+        <button
+          @click="showSaveModal = false"
+          class="inline-flex items-center py-2.5 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+          title="close"
+        >
+          <IconCancel class="mr-0" />
+        </button>
+        <button
+          @click="handleSave"
+          class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          <IconDownload />
+
+          Save
+        </button>
+      </div>
+    </div>
     <button
       @click="handleCopyForTextbox"
       class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center sm:mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -124,7 +157,7 @@ function handleCopyForTextbox() {
             @click="handleCopyGroup(key)"
             class="px-2.5 py-2.5 inline-flex items-center text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
           >
-            <IconCopy style="margin: 0" />
+            <IconCopy style="margin: 0" title="copy to clipboard" />
           </button>
         </div>
       </div>
