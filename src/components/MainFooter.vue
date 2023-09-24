@@ -34,6 +34,18 @@ import { RouterLink } from "vue-router";
           </button>
         </a>
         <a
+          href="https:www.ayamaru.com/more"
+          alt="Link to apps page"
+          target="_blank"
+        >
+          <button
+            type="button"
+            class="px-3 py-2 mr-2 text-xs font-medium text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-lg text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800"
+          >
+            More apps 🔗
+          </button>
+        </a>
+        <a
           href="https://forms.gle/NLuhoMf6zxQd1Y9y5"
           alt="Link to suggest a feature form"
           target="_blank"
