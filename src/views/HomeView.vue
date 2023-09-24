@@ -8,15 +8,24 @@ import IconCheck from "../components/icons/IconCheck.vue";
 import IconExclamation from "../components/icons/IconExclamation.vue";
 import FileUploader from "../components/FileUploader.vue";
 import Card from "../components/Card.vue";
+import Modal from "../components/Modal.vue";
 import ImageSelector from "../components/ImageSelector.vue";
 import IconCancel from "../components/icons/IconCancel.vue";
 
-import { saveFile, getFileName } from "../components/helpers";
+import {
+  saveFile,
+  getFileName,
+  removeExif,
+  saveImage,
+} from "../components/helpers";
 
 let rShowMessage = ref(null);
 
 let rImages = ref(null);
 let rSelected = ref(null);
+let rShowSavePictureModal = ref(false);
+
+let rPictureFilename = ref(null);
 
 function getStringFromBytes(uint8Array) {
   const decoder = new TextDecoder("utf-8");
@@ -51,7 +60,7 @@ async function getImageData(file) {
         type = "notFound";
       }
 
-      resolve({ params, type, imageURL, id, filename });
+      resolve({ params, type, imageURL, id, filename, file });
     });
   });
 }
@@ -87,6 +96,17 @@ function handleSave() {
   } else if (type === "default") {
     saveFile(params, filename, "txt");
   }
+}
+
+async function handleSavePicture() {
+  rPictureFilename.value = rSelected.value.filename;
+  rShowSavePictureModal.value = true;
+}
+
+async function handleDownloadPicture() {
+  rShowSavePictureModal.value = false;
+  const blob = await removeExif(rSelected.value.file);
+  saveImage(blob, rPictureFilename.value);
 }
 </script>
 
@@ -129,6 +149,7 @@ function handleSave() {
       @save="handleSave"
       @copy="handleCopy"
       @clear="rSelected = null"
+      @save-picture="handleSavePicture"
     />
     <ComfyPrompt
       v-if="rSelected.type === 'comfyui'"
@@ -137,6 +158,7 @@ function handleSave() {
       @save="handleSave"
       @copy="handleCopy"
       @clear="rSelected = null"
+      @save-picture="handleSavePicture"
     />
 
     <div
@@ -150,6 +172,7 @@ function handleSave() {
       />
     </div>
   </div>
+
   <div v-else-if="rImages?.length">
     <button
       @click="rImages = null"
@@ -169,4 +192,22 @@ function handleSave() {
   <div v-else class="w-full h-full flex items-center">
     <FileUploader @files-change="handleFile" />
   </div>
+
+  <Modal
+    :show="rShowSavePictureModal"
+    @close="rShowSavePictureModal = false"
+    @save="handleDownloadPicture"
+  >
+    <label
+      for="prompt"
+      class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+      >Filename</label
+    >
+    <textarea
+      class="w-full p-3 dark:bg-black dark:text-gray-400"
+      :value="rPictureFilename"
+      @input="rPictureFilename = $event.target.value"
+    >
+    </textarea>
+  </Modal>
 </template>

@@ -1,10 +1,11 @@
 <script setup>
-import { ref, onMounted, defineEmits, onUnmounted, watch } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import { LiteGraph } from "litegraph.js";
 import { nanoid } from "nanoid";
 import IconCancel from "./icons/IconCancel.vue";
 import IconCopy from "./icons/IconCopy.vue";
 import IconDownload from "./icons/IconDownload.vue";
+import Modal from "./Modal.vue";
 
 const props = defineProps({
   params: {
@@ -14,7 +15,13 @@ const props = defineProps({
     type: String,
   },
 });
-const emit = defineEmits(["copy", "save", "clear", "update:filename"]);
+const emit = defineEmits([
+  "copy",
+  "save",
+  "clear",
+  "save-picture",
+  "update:filename",
+]);
 
 let rPrompts = ref(null);
 const showSaveModal = ref(false);
@@ -117,14 +124,24 @@ function handleCopyGroup(prompt) {
 
 <template>
   <div v-if="rPrompts" class="flex flex-col items-center justify-center">
-    <div class="py-2 flex justify-end w-full max-w-xl flex-col sm:flex-row">
+    <div class="flex justify-between w-full max-w-xl flex-col sm:flex-row">
       <button
         @click="$emit('clear')"
-        class="inline-flex items-center py-2.5 px-3 sm:mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+        class="inline-flex items-center py-2.5 px-3 sm:mb-0 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
         title="clear"
       >
         <IconCancel style="margin: 0" />
       </button>
+      <button
+        @click="emit('save-picture')"
+        class="h-10 inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+      >
+        <IconDownload />
+
+        Remove prompt & save
+      </button>
+    </div>
+    <div class="py-2 flex justify-end w-full max-w-xl flex-col sm:flex-row">
       <button
         @click="showSaveModal = true"
         class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center sm:mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -133,10 +150,11 @@ function handleCopyGroup(prompt) {
 
         Save as ComfyUI workflow
       </button>
-      <div
-        v-if="showSaveModal"
-        style="width: 300px; height: auto; left: calc(50% - 150px)"
-        class="p-3 fixed z-10 flex flex-col gap-3 items-center justify-center bg-slate-50 shadow dark:bg-slate-900"
+
+      <Modal
+        :show="showSaveModal"
+        @close="showSaveModal = false"
+        @save="handleSave"
       >
         <label
           for="prompt"
@@ -149,33 +167,18 @@ function handleCopyGroup(prompt) {
           @input="$emit('update:filename', $event.target.value)"
         >
         </textarea>
-        <div class="w-full flex justify-end gap-3">
-          <button
-            @click="showSaveModal = false"
-            class="inline-flex items-center py-2.5 px-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-            title="close"
-          >
-            <IconCancel style="margin: 0" />
-          </button>
-          <button
-            @click="handleSave"
-            class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            <IconDownload />
+      </Modal>
 
-            Save
-          </button>
-        </div>
-      </div>
       <button
         @click="handleCopy"
         class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
       >
         <IconCopy />
 
-        Save as ComfyUI workflow
+        Copy all
       </button>
     </div>
+
     <div class="flex flex-col items-start w-full max-w-xl">
       <div
         v-for="prompt in rPrompts"
