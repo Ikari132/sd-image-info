@@ -34,7 +34,7 @@ import { RouterLink } from "vue-router";
           </button>
         </a>
         <a
-          href="https:www.ayamaru.com/more"
+          href="https://www.ayamaru.com/more"
           alt="Link to apps page"
           target="_blank"
         >
